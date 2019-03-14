@@ -2,6 +2,8 @@ package com.ids.agenda.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,22 +40,35 @@ public class ContactoRestController {
 	
 	@CrossOrigin(origins = "*")
 	@GetMapping("/api/contactos/{contactoId}")
-	public Contacto consultaContacto(@PathVariable(name="contactoId")Long contactoId) {
-		return contactoService.consultaContacto(contactoId);
+	public Contacto consultaContacto(@PathVariable(name="contactoId")Long contactoId, HttpServletResponse res) {
+		Contacto contac = contactoService.consultaContacto(contactoId);
+		if(contac == null) {
+			System.out.println("Este contacto no existe!!!");
+			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		    return null;
+		}
+		else{
+			System.out.println("Si existe!!");
+			return contactoService.consultaContacto(contactoId);
+			
+		}
+		
 	}
 	
 	@CrossOrigin(origins = "*")
 	@GetMapping("/api/contactos/buscar/{contactoNombre}")
-	public Contacto consultaNombreContacto(@PathVariable(name="contactoNombre")String contactoNombre) {
+	public Contacto consultaNombreContacto(@PathVariable(name="contactoNombre")String contactoNombre, HttpServletResponse res) {
 		Contacto contac = contactoService.consultaNombreContacto(contactoNombre);
 		if(contac == null) {
 			System.out.println("Este contacto no existe!!!");
+			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		    return null;
 		}
 		else{
 			System.out.println("Si existe!!");
+			return contactoService.consultaNombreContacto(contactoNombre);
 			
 		}
-		return contactoService.consultaNombreContacto(contactoNombre);
 		
 		
 	}
@@ -62,7 +77,7 @@ public class ContactoRestController {
 	@PostMapping("/api/contactos")
 	public void guardaContacto(@RequestBody Contacto contacto){
 		contactoService.guardaContacto(contacto);
-		System.out.println("Alumno Guardado con Exito!!");
+		System.out.println("Contacto Guardado con Exito!!");
 	  
 	}
 	
@@ -70,7 +85,7 @@ public class ContactoRestController {
 	@DeleteMapping("/api/contactos/{contactoId}")
 	public void borrarContacto(@PathVariable(name="contactoId")Long contactoId) {
 		contactoService.borraContacto(contactoId);
-		System.out.println("Alumno Eliminado con Exito!!");
+		System.out.println("Contacto Eliminado con Exito!!");
 	}
 	
 	@CrossOrigin(origins = "*")
@@ -82,6 +97,6 @@ public class ContactoRestController {
 			contactoService.actualizaContacto(contacto);
 			System.out.println("Contacto Actualizado con Exito!!");
 		}
-	 }
+	}
 	
 }

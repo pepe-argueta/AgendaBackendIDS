@@ -25,7 +25,7 @@ public class ContactoServiceImpl implements ContactoService {
 	}
 
 	public List<Contacto> consultaContacto() {
-		List<Contacto> contacto = contactoRepository.findAll();
+		List<Contacto> contacto = contactoRepository.findAllContacts();
 		return contacto;
 	}
 	
